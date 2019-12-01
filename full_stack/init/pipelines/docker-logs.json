@@ -18,7 +18,7 @@
     },
     {
       "set": {
-        "field": "message",
+        "field": "docker.message",
         "value": "{{_source.log}}"
       }
     },
@@ -51,7 +51,7 @@
     },
     {
       "grok": {
-        "field": "message",
+        "field": "docker.message",
         "patterns": ["%{DATA}%{LEVEL:docker.level}%{DATA}"],
         "pattern_definitions": {
           "LEVEL": "INFO|WARNING|ERROR|FATAL|DEBUG|TRACE"
