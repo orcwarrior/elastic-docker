@@ -1,11 +1,13 @@
 filebeat.inputs:
-  - type: docker
+  - type: container
     combine_partial: true
     containers:
       path: "/hostfs/var/lib/docker/containers/*/*.log"
       stream: "stdout"
-      ids:
-        - "*"
+      ids: "*"
+    json.keys_under_root: true
+    json.add_error_key: true
+    json.message_key: log
     exclude_files: ['\.gz$']
     ignore_older: 10m
 
@@ -19,22 +21,22 @@ processors:
   - add_docker_metadata:
       host: "unix:///var/run/docker.sock"
 
-filebeat.config.modules:
-  path: ${path.config}/modules.d/*.yml
-  reload.enabled: false
+#filebeat.config.modules:
+#  path: ${path.config}/modules.d/*.yml
+#  reload.enabled: false
 
 # setup filebeat to send output to logstash
 output.elasticsearch:
   hosts: ["elasticsearch:9200"]
 
 # Write Filebeat own logs only to file to avoid catching them with itself in docker log files
-logging.level: error
+logging.level: info
 logging.to_files: false
 logging.to_syslog: false
 loggins.metrice.enabled: false
-logging.files:
-  path: /var/log/filebeat
-  name: filebeat
-  keepfiles: 7
-  permissions: 0644
+#logging.files:
+#  path: /var/log/filebeat
+#  name: filebeat
+#  keepfiles: 7
+#  permissions: 0644
 ssl.verification_mode: none
