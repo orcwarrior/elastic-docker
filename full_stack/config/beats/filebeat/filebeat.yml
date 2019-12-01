@@ -1,10 +1,13 @@
 filebeat.inputs:
   - type: container
-#    combine_partial: true
-    paths: "/hostfs/var/lib/docker/containers/*/*.log"
+    combine_partial: true
+    containers:
+      path: "/hostfs/var/lib/docker/containers/*/*.log"
+      stream: "stdout"
+      ids: "*"
     json.keys_under_root: true
     json.add_error_key: true
-#    json.message_key: log
+    json.message_key: log
     exclude_files: ['\.gz$']
     ignore_older: 10m
 
