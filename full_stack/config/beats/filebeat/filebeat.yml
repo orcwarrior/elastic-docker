@@ -1,6 +1,6 @@
 filebeat.inputs:
   - type: container
-    combine_partial: true
+#    combine_partial: true
     paths: "/hostfs/var/lib/docker/containers/*/*.log"
     json.keys_under_root: true
     json.add_error_key: true
