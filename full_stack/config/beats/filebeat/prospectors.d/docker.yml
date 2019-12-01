@@ -1,40 +1,11 @@
-filebeat.inputs:
-  - type: docker
-    combine_partial: true
-    containers:
-      path: "/hostfs/var/lib/docker/containers/*/*.log"
-      stream: "stdout"
-      ids:
-        - "*"
-    exclude_files: ['\.gz$']
-    ignore_older: 10m
-
-processors:
-  # decode the log field (sub JSON document) if JSON encoded, then maps it's fields to elasticsearch fields
-  - decode_json_fields:
-      fields: ["log", "message"]
-      target: ""
-      # overwrite existing target elasticsearch fields while decoding json fields
-      overwrite_keys: true
-  - add_docker_metadata:
-      host: "unix:///var/run/docker.sock"
-
-filebeat.config.modules:
-  path: ${path.config}/modules.d/*.yml
-  reload.enabled: false
-
-# setup filebeat to send output to logstash
-output.elasticsearch:
-  hosts: ["elasticsearch:9200"]
-
-# Write Filebeat own logs only to file to avoid catching them with itself in docker log files
-logging.level: error
-logging.to_files: false
-logging.to_syslog: false
-loggins.metrice.enabled: false
-logging.files:
-  path: /var/log/filebeat
-  name: filebeat
-  keepfiles: 7
-  permissions: 0644
-ssl.verification_mode: none
+#This prospector captures the docker logs.
+- type: log
+  paths:
+    - /hostfs/var/lib/docker/containers/*/*.log
+  json.keys_under_root: true
+  json.overwrite_keys: true
+  close_inactive: 24h
+  close_renamed: true
+  pipeline: docker-logs
+  processors:
+  - add_docker_metadata: ~
