@@ -51,7 +51,7 @@
     },
     {
       "grok": {
-        "field": "docker.message",
+        "field": "message",
         "patterns": ["%{DATA}%{LEVEL:docker.level}%{DATA}"],
         "pattern_definitions": {
           "LEVEL": "INFO|WARNING|ERROR|FATAL|DEBUG|TRACE"
