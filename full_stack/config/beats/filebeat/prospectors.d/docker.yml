@@ -2,8 +2,8 @@
 - type: log
   paths:
     - /hostfs/var/lib/docker/containers/*/*.log
-  json.keys_under_root: true
-  message_key: log
+  json.keys_under_root: false
+#  message_key: log
   json.overwrite_keys: true
   json.add_error_key: true
   tags:
