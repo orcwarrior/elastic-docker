@@ -88,10 +88,10 @@ services:
       - ./config/beats/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
       #Mount the prospectors directory. Users can in turn add propspectors to this directory and they will be dynamically loaded.
       - ./config/beats/filebeat/prospectors.d/:/usr/share/filebeat/prospectors.d/
-      #Mount the nginx logs into the Filebeat container so we can access and index them using the Filebeat nginx module.
-      - ./logs/nginx/:/var/log/nginx/
-      #Mount the MySQL logs into the Filebeat container so we can access and and index them using the Filebeat MySQL module.
-      - ./logs/mysql/:/var/log/mysql/
+#      #Mount the nginx logs into the Filebeat container so we can access and index them using the Filebeat nginx module.
+#      - ./logs/nginx/:/var/log/nginx/
+#      #Mount the MySQL logs into the Filebeat container so we can access and and index them using the Filebeat MySQL module.
+#      - ./logs/mysql/:/var/log/mysql/
       #Mount the hosts system log directory. This represents the logs of the VM hosting docker. Consumed by the Filebeat system module.
       - /private/var/log/:/var/log/host/:ro
       #Mount the Docker logs for indexing by the custom prospector ./config/filebeat/prospectors.d.
@@ -153,34 +153,34 @@ services:
     depends_on:
       elasticsearch:  { condition: service_healthy }
 
-  #nginx container
-  nginx:
-    container_name: nginx
-    hostname: nginx
-    build: ${PWD}/config/nginx
-    networks: ['stack']
-    #Expose port 80 to allow users to hit content and generate data for filebeat and packetbeat.
-    ports: ['80:80']
-    command: nginx -g 'daemon off;'
-    volumes:
-      #Logs are mounted to a relative path. These are also accessed by Filebeat and consumed by the Nginx module.
-      - ./logs/nginx/:/var/log/nginx/
-
-  #MySQL container
-  mysql:
-    container_name: mysql
-    hostname: mysql
-    build: ${PWD}/config/mysql
-    environment:
-      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
-    networks: ['stack']
-    #Expose port 3306 to allow users to connect and perform operations. These will be picked up by Packetbeat, Filebeat and Metricbeat.
-    ports: ['3306:3306']
-    volumes:
-      #Use named volume so mysql data is persisted across restart.
-      - mysqldata:/var/lib/mysql/
-      #Logs are mounted to a relative path. These are also accessed by Filebeat and consumed by the MySQL module.
-      - ./logs/mysql:/var/log/mysql/
+#  #nginx container
+#  nginx:
+#    container_name: nginx
+#    hostname: nginx
+#    build: ${PWD}/config/nginx
+#    networks: ['stack']
+#    #Expose port 80 to allow users to hit content and generate data for filebeat and packetbeat.
+#    ports: ['80:80']
+#    command: nginx -g 'daemon off;'
+#    volumes:
+#      #Logs are mounted to a relative path. These are also accessed by Filebeat and consumed by the Nginx module.
+#      - ./logs/nginx/:/var/log/nginx/
+#
+#  #MySQL container
+#  mysql:
+#    container_name: mysql
+#    hostname: mysql
+#    build: ${PWD}/config/mysql
+#    environment:
+#      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+#    networks: ['stack']
+#    #Expose port 3306 to allow users to connect and perform operations. These will be picked up by Packetbeat, Filebeat and Metricbeat.
+#    ports: ['3306:3306']
+#    volumes:
+#      #Use named volume so mysql data is persisted across restart.
+#      - mysqldata:/var/lib/mysql/
+#      #Logs are mounted to a relative path. These are also accessed by Filebeat and consumed by the MySQL module.
+#      - ./logs/mysql:/var/log/mysql/
 
   #Configure Stack container. This short lived container configures the stack once Kibana and Elasticsearch are available.
   #More specifically, using a script it sets a default index pattern, loads templates and pipelines.
