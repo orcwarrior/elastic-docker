@@ -43,13 +43,6 @@
       }
     },
     {
-      "script": {
-        "lang": "painless",
-        "inline": "ctx.docker.container_id = ctx.docker.full_container_id.substring(0,12);",
-        "ignore_failure" : true
-      }
-    },
-    {
       "grok": {
         "field": "docker.message",
         "patterns": ["%{DATA}%{LEVEL:docker.level}%{DATA}"],

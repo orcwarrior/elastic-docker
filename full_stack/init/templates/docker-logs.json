@@ -17,22 +17,6 @@
           "@timestamp": {
             "type": "date"
           },
-          "docker": {
-            "properties": {
-              "container_id": {
-                "type": "keyword"
-              },
-              "full_container_id": {
-                "type": "keyword"
-              },
-              "level": {
-                "type": "keyword"
-              },
-              "message": {
-                "type": "text"
-              }
-            }
-          },
           "source": {
             "type": "keyword"
           },
